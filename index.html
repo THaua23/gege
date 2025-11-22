@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menu Estiloso de Lanchonete</title>
+    <title>Lanchonete Do GEGÉ</title>
     <link rel="stylesheet" href="style.css"> 
 </head>
 <body>
 
     <header class="cabecalho-menu">
         <h1>Lanchonete Do GEGÉ</h1>
-        <p>O melhore lanches da cidade!</p>
+        <p>O melhor lanche da cidade!</p>
     </header>
 
     <main class="menu-principal">
@@ -27,6 +27,12 @@
                 </ul>
         </section>
         
+        <section id="sorvetes" class="secao-menu">
+            <h2>🍦 Sorvetes</h2>
+            <ul id="lista-sorvetes" class="lista-itens">
+                </ul>
+        </section>
+
         <section id="carrinho" class="secao-menu">
             <h2>🛒 Seu Pedido</h2>
             <ul id="lista-pedido" class="lista-itens">
@@ -37,14 +43,18 @@
             </ul>
             <div id="total-pedido">
                 <p>Total: <span id="valor-total">R$ 0,00</span></p>
-                <button id="btn-whatsapp" disabled>Carrinho Vazio</button>
-            </div>
+                </div>
         </section>
         
     </main>
     
     <footer class="rodape-menu">
-        <p>© 2025 Lanchonete Delícia. Todos os direitos reservados.</p>
+        <div id="rodape-fixo">
+            <a href="#carrinho" id="btn-ver-carrinho" disabled>
+                <p>🛒 Total: <span id="valor-total-fixo">R$ 0,00</span></p>
+                <button id="btn-whatsapp" disabled>Fazer Pedido por WhatsApp</button>
+            </a>
+        </div>
     </footer>
     
     <div id="modal-quantidade" class="modal-fundo">

@@ -10,6 +10,7 @@ body {
     background-color: #f7f3e8; /* Cor de fundo creme suave */
     color: #333; 
     line-height: 1.6;
+    padding-bottom: 70px; /* Adiciona espaço no final da página para o rodapé fixo */
 }
 
 /* Estilo do Cabeçalho */
@@ -40,7 +41,7 @@ body {
     padding: 0 20px;
 }
 
-/* Estilo das Seções (Lanches, Bebidas, Carrinho) */
+/* Estilo das Seções */
 .secao-menu {
     margin-bottom: 40px;
     padding: 20px;
@@ -117,18 +118,14 @@ body {
 }
 
 #total-pedido {
-    text-align: right;
-    padding-top: 15px;
-    border-top: 1px solid #ccc;
-    font-size: 1.3em;
-    font-weight: bold;
+    /* Escondido pois o total fixo é usado */
+    display: none; 
 }
 
-/* No carrinho, a descrição é o subtotal */
 #lista-pedido .descricao-item {
     color: #333; 
-    text-align: left; /* Alinha o subtotal à esquerda */
-    flex-basis: 30%; /* Mais espaço para o subtotal */
+    text-align: left; 
+    flex-basis: 30%; 
     order: 2;
     font-weight: normal;
 }
@@ -137,7 +134,7 @@ body {
     flex-basis: 30%;
 }
 
-/* Estilo para o grupo de controles no carrinho (os botões +/-) */
+/* Controles no carrinho (+/-) */
 .item-menu .controles-carrinho {
     display: flex;
     align-items: center;
@@ -146,7 +143,7 @@ body {
 }
 
 .controles-carrinho button {
-    background-color: #e84545; /* Vermelho para +/- */
+    background-color: #e84545; 
     color: white;
     border: none;
     padding: 4px 10px;
@@ -165,7 +162,7 @@ body {
 }
 
 
-/* --- Estilos para os Botões (Comprar e WhatsApp) --- */
+/* --- Estilos para os Botões --- */
 
 .btn-comprar {
     background-color: #4CAF50;
@@ -185,10 +182,11 @@ body {
 }
 
 #btn-whatsapp {
-    width: 100%;
-    margin-top: 15px;
-    padding: 12px;
-    font-size: 1.1em;
+    /* Estilos para o botão dentro da barra fixa */
+    width: auto; 
+    margin-top: 0;
+    padding: 10px 15px;
+    font-size: 1em;
     background-color: #25D366; /* Verde WhatsApp */
     color: white;
     border: none;
@@ -269,6 +267,7 @@ body {
     font-size: 1.2em;
     border: 1px solid #ccc;
     border-radius: 5px;
+    /* Remove as setas de incremento/decremento */
     --moz-appearance: textfield; 
 }
 
@@ -299,20 +298,59 @@ body {
 }
 
 
-/* Rodapé */
+/* --- Rodapé Fixo (Barra de Pedido) --- */
 .rodape-menu {
     text-align: center;
-    padding: 20px;
-    background-color: #333;
+    padding: 0; 
+    background-color: transparent; 
     color: #ccc;
     font-size: 0.9em;
     margin-top: 40px;
 }
 
+#rodape-fixo {
+    position: fixed; /* Fixa o elemento na viewport */
+    bottom: 0; /* Alinha na parte inferior */
+    left: 0;
+    width: 100%;
+    background-color: transparent; 
+    padding: 0;
+    box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.15);
+    z-index: 50; 
+}
+
+#btn-ver-carrinho {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 10px 20px;
+    background-color: #333; /* Fundo escuro para a barra fixa */
+    color: #fff;
+    font-size: 1.1em;
+    font-weight: bold;
+    text-decoration: none; 
+    transition: background-color 0.3s;
+}
+
+#btn-ver-carrinho:hover:not([disabled]) {
+    background-color: #444;
+}
+
+#btn-ver-carrinho p {
+    font-weight: bold;
+    margin: 0;
+}
+
+
 /* Mídia Query para Responsividade em telas pequenas */
 @media (max-width: 600px) {
     .cabecalho-menu h1 {
         font-size: 2em;
+    }
+
+    .menu-principal {
+        margin: 20px auto 80px auto; /* Aumenta margem inferior */
     }
 
     .item-menu {
@@ -335,5 +373,14 @@ body {
     
     #lista-pedido .descricao-item {
         text-align: center;
+    }
+    
+    #rodape-fixo {
+        padding: 0;
+        font-size: 1em;
+    }
+    
+    #btn-ver-carrinho {
+        padding: 10px;
     }
 }

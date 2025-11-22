@@ -1,0 +1,339 @@
+/* Configurações básicas e reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f7f3e8; /* Cor de fundo creme suave */
+    color: #333; 
+    line-height: 1.6;
+}
+
+/* Estilo do Cabeçalho */
+.cabecalho-menu {
+    background-color: #e84545; /* Vermelho vibrante */
+    color: #fff;
+    text-align: center;
+    padding: 30px 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.cabecalho-menu h1 {
+    font-size: 2.5em;
+    margin-bottom: 5px;
+    letter-spacing: 2px;
+}
+
+.cabecalho-menu p {
+    font-size: 1.1em;
+    font-style: italic;
+    color: #ffd662; /* Amarelo de destaque */
+}
+
+/* Estilo do Menu Principal */
+.menu-principal {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+/* Estilo das Seções (Lanches, Bebidas, Carrinho) */
+.secao-menu {
+    margin-bottom: 40px;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.secao-menu h2 {
+    color: #e84545;
+    border-bottom: 3px solid #ffd662;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    font-size: 1.8em;
+    text-transform: uppercase;
+}
+
+/* Lista de Itens */
+.lista-itens {
+    list-style: none;
+}
+
+/* Item Individual do Menu e Carrinho */
+.item-menu {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    padding: 15px 0;
+    border-bottom: 1px dashed #ccc;
+    align-items: center; 
+}
+
+.item-menu:last-child {
+    border-bottom: none;
+}
+
+.nome-item {
+    font-weight: bold;
+    font-size: 1.2em;
+    color: #2b2b2b;
+    flex-basis: 40%; 
+}
+
+.descricao-item {
+    font-size: 0.9em;
+    color: #666;
+    margin-top: 0; 
+    flex-basis: 50%; 
+    order: 2;
+}
+
+.preco-item {
+    font-weight: bold;
+    font-size: 1.2em;
+    color: #4CAF50; /* Verde para preço */
+    text-align: right;
+    flex-basis: 10%; 
+}
+
+/* Estilo para Itens em Destaque */
+.item-menu.destaque {
+    background-color: #fff8e1;
+    border-radius: 5px;
+    padding: 15px;
+    border: 2px solid #ffd662;
+}
+
+
+/* --- Estilos para a Seção do Carrinho --- */
+
+#carrinho {
+    margin-top: 60px;
+    border: 2px dashed #ffd662; 
+}
+
+#total-pedido {
+    text-align: right;
+    padding-top: 15px;
+    border-top: 1px solid #ccc;
+    font-size: 1.3em;
+    font-weight: bold;
+}
+
+/* No carrinho, a descrição é o subtotal */
+#lista-pedido .descricao-item {
+    color: #333; 
+    text-align: left; /* Alinha o subtotal à esquerda */
+    flex-basis: 30%; /* Mais espaço para o subtotal */
+    order: 2;
+    font-weight: normal;
+}
+
+#lista-pedido .nome-item {
+    flex-basis: 30%;
+}
+
+/* Estilo para o grupo de controles no carrinho (os botões +/-) */
+.item-menu .controles-carrinho {
+    display: flex;
+    align-items: center;
+    flex-basis: 30%; 
+    justify-content: flex-end;
+}
+
+.controles-carrinho button {
+    background-color: #e84545; /* Vermelho para +/- */
+    color: white;
+    border: none;
+    padding: 4px 10px;
+    font-size: 1em;
+    cursor: pointer;
+    margin: 0 5px;
+    border-radius: 3px;
+    line-height: 1; 
+}
+
+.controles-carrinho .quantidade-display {
+    font-weight: bold;
+    font-size: 1.1em;
+    min-width: 20px;
+    text-align: center;
+}
+
+
+/* --- Estilos para os Botões (Comprar e WhatsApp) --- */
+
+.btn-comprar {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    margin-top: 5px;
+    order: 3; 
+}
+
+.btn-comprar:hover {
+    background-color: #43A047;
+}
+
+#btn-whatsapp {
+    width: 100%;
+    margin-top: 15px;
+    padding: 12px;
+    font-size: 1.1em;
+    background-color: #25D366; /* Verde WhatsApp */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#btn-whatsapp:hover {
+    background-color: #128C7E;
+}
+
+#btn-whatsapp:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+
+/* --- Estilos do Modal de Quantidade --- */
+
+.modal-fundo {
+    display: none; 
+    position: fixed;
+    z-index: 100; 
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.6); 
+}
+
+.modal-conteudo {
+    background-color: #fefefe;
+    margin: 15% auto; 
+    padding: 30px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 400px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.modal-conteudo h3 {
+    color: #e84545;
+    margin-bottom: 10px;
+}
+
+#modal-item-nome {
+    font-weight: bold;
+    font-size: 1.2em;
+    margin-bottom: 20px;
+}
+
+.modal-controles {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.modal-controles button {
+    background-color: #e84545;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 1.5em;
+    cursor: pointer;
+    margin: 0 5px;
+    border-radius: 5px;
+}
+
+#input-quantidade {
+    width: 60px;
+    height: 40px;
+    text-align: center;
+    font-size: 1.2em;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    --moz-appearance: textfield; 
+}
+
+#input-quantidade::-webkit-outer-spin-button,
+#input-quantidade::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+#btn-adicionar-modal {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 1.1em;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.btn-fechar {
+    background-color: #9e9e9e;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+
+/* Rodapé */
+.rodape-menu {
+    text-align: center;
+    padding: 20px;
+    background-color: #333;
+    color: #ccc;
+    font-size: 0.9em;
+    margin-top: 40px;
+}
+
+/* Mídia Query para Responsividade em telas pequenas */
+@media (max-width: 600px) {
+    .cabecalho-menu h1 {
+        font-size: 2em;
+    }
+
+    .item-menu {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .nome-item, .descricao-item, .preco-item, .btn-comprar, .controles-carrinho {
+        flex-basis: 100%;
+        text-align: left;
+        margin-top: 5px;
+        order: initial;
+    }
+    
+    .btn-comprar, .controles-carrinho {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+    }
+    
+    #lista-pedido .descricao-item {
+        text-align: center;
+    }
+}

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu Estiloso de Lanchonete</title>
+    <link rel="stylesheet" href="style.css"> 
+</head>
+<body>
+
+    <header class="cabecalho-menu">
+        <h1>Lanchonete Do GEGÉ</h1>
+        <p>O melhore lanches da cidade!</p>
+    </header>
+
+    <main class="menu-principal">
+        
+        <section id="lanches" class="secao-menu">
+            <h2>🍔 Lanches</h2>
+            <ul id="lista-lanches" class="lista-itens">
+                </ul>
+        </section>
+
+        <section id="bebidas" class="secao-menu">
+            <h2>🥤 Bebidas</h2>
+            <ul id="lista-bebidas" class="lista-itens">
+                </ul>
+        </section>
+        
+        <section id="carrinho" class="secao-menu">
+            <h2>🛒 Seu Pedido</h2>
+            <ul id="lista-pedido" class="lista-itens">
+                <li id="carrinho-vazio" class="item-menu" style="display: block;">
+                    <span class="nome-item">Seu carrinho está vazio.</span>
+                    <span class="descricao-item">Clique em um item do menu para adicionar.</span>
+                </li>
+            </ul>
+            <div id="total-pedido">
+                <p>Total: <span id="valor-total">R$ 0,00</span></p>
+                <button id="btn-whatsapp" disabled>Carrinho Vazio</button>
+            </div>
+        </section>
+        
+    </main>
+    
+    <footer class="rodape-menu">
+        <p>© 2025 Lanchonete Delícia. Todos os direitos reservados.</p>
+    </footer>
+    
+    <div id="modal-quantidade" class="modal-fundo">
+        <div class="modal-conteudo">
+            <h3>Escolher Quantidade</h3>
+            <p id="modal-item-nome"></p>
+            <div class="modal-controles">
+                <button id="btn-decrementar">-</button>
+                <input type="number" id="input-quantidade" value="1" min="1">
+                <button id="btn-incrementar">+</button>
+            </div>
+            <button id="btn-adicionar-modal">Adicionar ao Pedido</button>
+            <button id="btn-fechar-modal" class="btn-fechar">Cancelar</button>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+
+</body>
+</html>

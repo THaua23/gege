@@ -11,12 +11,12 @@ const menu = {
         { id: 8, nome: 'X Eggs Bacon', ingredientes: ['Pão', 'carne', 'bacon', 'queijo', 'ovo', 'salada'], preco: 25.00, destaque: true }
     ],
     adicionais: [
-        { id: 9, nome: 'Ovo', preco: 2.00 },
-        { id: 10, nome: 'Salsicha', preco: 2.00 },
-        { id: 11, nome: 'Carne', preco: 3.00 },
-        { id: 12, nome: 'Calabresa', preco: 5.00 },
-        { id: 13, nome: 'Queijo', preco: 3.50 },
-        { id: 14, nome: 'Bacom', preco: 8.00 }
+        { id: 9, nome: 'Ovo', preco: 2.00, tipo: 'adicional' },
+        { id: 10, nome: 'Salsicha', preco: 2.00, tipo: 'adicional' },
+        { id: 11, nome: 'Carne', preco: 3.00, tipo: 'adicional' },
+        { id: 12, nome: 'Calabresa', preco: 5.00, tipo: 'adicional' },
+        { id: 13, nome: 'Queijo', preco: 3.50, tipo: 'adicional' },
+        { id: 14, nome: 'Bacom', preco: 8.00, tipo: 'adicional' }
     ],
     bebidas: [
         { id: 15, nome: 'Coca lata', preco: 5.00 },
@@ -60,6 +60,7 @@ const chavePix = '91985042796'; // PIX: Número sem o "55"
 
 // Modal Elements
 const modal = document.getElementById('modal-quantidade');
+const modalConteudo = modal.querySelector('.modal-conteudo'); // Para injetar o HTML dos adicionais
 const modalItemNome = document.getElementById('modal-item-nome');
 const inputQuantidade = document.getElementById('input-quantidade');
 const btnAdicionarModal = document.getElementById('btn-adicionar-modal');
@@ -76,7 +77,8 @@ function formatarPreco(preco) {
 }
 
 function calcularTotal() {
-    const total = carrinho.reduce((sum, item) => sum + (item.preco * item.quantidade), 0);
+    // Calcula o total considerando o preço base + o preço dos adicionais (já calculado e armazenado em item.preco)
+    const total = carrinho.reduce((sum, item) => sum + (item.precoTotalItem * item.quantidade), 0);
     const totalFormatado = formatarPreco(total);
 
     valorTotalSpan.textContent = totalFormatado; 
@@ -91,7 +93,7 @@ function calcularTotal() {
         btnWhatsapp.disabled = true;
         btnWhatsapp.textContent = 'Carrinho Vazio';
         btnVerCarrinho.setAttribute('disabled', 'disabled');
-        carrinhoVazio.style.display = 'block';
+        // A lógica de exibição do carrinho vazio foi movida para renderizarCarrinho para ser mais robusta
     }
 }
 
@@ -117,14 +119,64 @@ function renderizarItemMenu(item, descricao, listaElemento, tipo) {
 
 // --- FUNÇÕES DO MODAL ---
 
+function renderizarAdicionais() {
+    // Remove qualquer lista de adicionais anterior
+    const listaAntiga = document.getElementById('lista-adicionais-modal');
+    if (listaAntiga) {
+        listaAntiga.remove();
+    }
+    
+    // Se o item não for um lanche, não renderiza nada
+    if (itemAbertoNoModal.tipo !== 'lanche') return;
+
+    const divAdicionais = document.createElement('div');
+    divAdicionais.id = 'lista-adicionais-modal';
+    divAdicionais.innerHTML = `
+        <hr style="margin: 15px 0; border-color: #eee;">
+        <h4 style="color: #444; margin-bottom: 10px;">Adicionais (Opcional):</h4>
+    `;
+    
+    const ul = document.createElement('ul');
+    ul.style.listStyle = 'none';
+    ul.style.padding = '0';
+    ul.style.textAlign = 'left';
+
+    menu.adicionais.forEach(adicional => {
+        const li = document.createElement('li');
+        li.style.marginBottom = '5px';
+        li.innerHTML = `
+            <input type="checkbox" id="adicional-${adicional.id}" data-preco="${adicional.preco}" data-nome="${adicional.nome}">
+            <label for="adicional-${adicional.id}" style="font-weight: normal; margin-left: 5px;">
+                ${adicional.nome} (+${formatarPreco(adicional.preco)})
+            </label>
+        `;
+        ul.appendChild(li);
+    });
+
+    divAdicionais.appendChild(ul);
+    
+    // Insere a lista de adicionais antes dos botões do modal
+    modalConteudo.insertBefore(divAdicionais, btnAdicionarModal);
+}
+
+
 function abrirModal(item) {
     itemAbertoNoModal = item;
     modalItemNome.textContent = item.nome;
     inputQuantidade.value = 1; 
+    
+    // Renderiza a seção de adicionais APENAS para lanches
+    renderizarAdicionais(); 
+
     modal.style.display = 'block';
 }
 
 function fecharModal() {
+    // Remove a lista de adicionais ao fechar
+    const listaAdicionais = document.getElementById('lista-adicionais-modal');
+    if (listaAdicionais) {
+        listaAdicionais.remove();
+    }
     modal.style.display = 'none';
     itemAbertoNoModal = null;
 }
@@ -149,37 +201,61 @@ function adicionarItemAoCarrinho() {
     if (!itemAbertoNoModal) return;
 
     const quantidade = parseInt(inputQuantidade.value);
-    
     if (isNaN(quantidade) || quantidade <= 0) {
         alert('Quantidade inválida.');
         return;
     }
 
-    const itemExistente = carrinho.find(item => item.id === itemAbertoNoModal.id);
+    let precoAdicionais = 0;
+    let adicionaisSelecionados = [];
 
-    if (itemExistente) {
-        itemExistente.quantidade += quantidade;
-    } else {
-        carrinho.push({ 
-            ...itemAbertoNoModal, 
-            quantidade: quantidade, 
-            tipo: itemAbertoNoModal.tipo 
+    // Lógica para coletar adicionais APENAS se for um lanche
+    if (itemAbertoNoModal.tipo === 'lanche') {
+        const checkboxes = document.querySelectorAll('#lista-adicionais-modal input[type="checkbox"]:checked');
+        checkboxes.forEach(checkbox => {
+            const preco = parseFloat(checkbox.dataset.preco);
+            const nome = checkbox.dataset.nome;
+            precoAdicionais += preco;
+            adicionaisSelecionados.push({ nome, preco });
         });
     }
+
+    const precoBase = itemAbertoNoModal.preco;
+    const precoTotalItem = precoBase + precoAdicionais; // Preço do item + adicionais
+
+    // A lógica de encontrar o item existente no carrinho deve ser modificada
+    // para considerar a seleção de adicionais, pois dois "Lanches A" com adicionais diferentes
+    // são tratados como itens separados.
+    
+    // Simplificando por enquanto: tratamos cada adição como um novo item no carrinho
+    // para evitar complexidade de "mesmo lanche com diferentes adicionais".
+
+    // Criamos um identificador único para o item no carrinho (baseado em timestamp)
+    // para tratar cada adição como distinta.
+
+    carrinho.push({ 
+        ...itemAbertoNoModal, 
+        quantidade: quantidade, 
+        precoTotalItem: precoTotalItem, // Novo preço total (base + adicionais)
+        adicionaisSelecionados: adicionaisSelecionados, // Array de adicionais
+        carrinhoId: Date.now() + Math.random(), // ID Único para o carrinho
+        precoBase: precoBase
+    });
+
 
     fecharModal();
     renderizarCarrinho();
 }
 
 
-function ajustarQuantidade(itemId, ajuste) {
-    const item = carrinho.find(i => i.id === itemId);
+function ajustarQuantidade(carrinhoId, ajuste) {
+    const item = carrinho.find(i => i.carrinhoId === carrinhoId);
     if (!item) return;
 
     item.quantidade += ajuste;
 
     if (item.quantidade <= 0) {
-        const index = carrinho.findIndex(i => i.id === itemId);
+        const index = carrinho.findIndex(i => i.carrinhoId === carrinhoId);
         carrinho.splice(index, 1);
     }
     
@@ -206,18 +282,27 @@ function renderizarCarrinho() {
 
     carrinho.forEach(item => {
         const li = document.createElement('li');
-        li.className = 'item-menu'; 
+        li.className = 'item-menu item-carrinho-personalizado'; 
         
-        const subtotal = item.preco * item.quantidade;
+        const subtotal = item.precoTotalItem * item.quantidade;
+
+        let adicionaisHtml = '';
+        if (item.adicionaisSelecionados && item.adicionaisSelecionados.length > 0) {
+            const lista = item.adicionaisSelecionados.map(add => `${add.nome} (+${formatarPreco(add.preco)})`).join('<br>');
+            adicionaisHtml = `<div class="adicionais-carrinho" style="font-size: 0.8em; color: #888; margin-top: 5px; width: 100%; order: 4;">
+                *Adicionais:*<br>${lista}
+            </div>`;
+        }
         
         li.innerHTML = `
             <span class="nome-item">${item.nome}</span>
             <span class="descricao-item">${formatarPreco(subtotal)}</span>
-            <div class="controles-carrinho" data-id="${item.id}">
+            <div class="controles-carrinho" data-id="${item.carrinhoId}">
                 <button class="btn-ajustar" data-ajuste="-">-</button>
                 <span class="quantidade-display">${item.quantidade}</span>
                 <button class="btn-ajustar" data-ajuste="+">+</button>
             </div>
+            ${adicionaisHtml}
         `;
         listaPedido.appendChild(li);
     });
@@ -233,11 +318,20 @@ function gerarMensagemWhatsapp() {
     let mensagem = `*Olá, meu pedido da Lanchonete Do GEGÉ é o seguinte:*\n\n`;
     
     carrinho.forEach(item => {
-        const subtotal = item.preco * item.quantidade;
-        mensagem += `* ${item.quantidade}x ${item.nome} = ${formatarPreco(subtotal)}\n`;
+        const subtotal = item.precoTotalItem * item.quantidade;
+
+        // Linha do Item Principal
+        mensagem += `* ${item.quantidade}x ${item.nome} - ${formatarPreco(subtotal)}\n`;
+        
+        // Linhas dos Adicionais
+        if (item.adicionaisSelecionados && item.adicionaisSelecionados.length > 0) {
+            item.adicionaisSelecionados.forEach(add => {
+                 mensagem += `     - Adicional ${add.nome} (+${formatarPreco(add.preco)})\n`;
+            });
+        }
     });
 
-    const total = carrinho.reduce((sum, item) => sum + (item.preco * item.quantidade), 0);
+    const total = carrinho.reduce((sum, item) => sum + (item.precoTotalItem * item.quantidade), 0);
     mensagem += `\n*TOTAL GERAL:* ${formatarPreco(total)}\n`;
     
     // Adiciona a informação do PIX
@@ -299,17 +393,19 @@ document.addEventListener('click', (e) => {
         const itemSelecionado = itensNoMenu.find(i => i.id === itemId);
         
         if (itemSelecionado) {
-            abrirModal({...itemSelecionado, tipo: itemTipo});
+            // Passa o item e o tipo para o modal
+            abrirModal({...itemSelecionado, tipo: itemTipo}); 
         }
     }
     
     // 2. Clique nos botões de ajuste de quantidade (+/-) no CARRINHO
     if (e.target.classList.contains('btn-ajustar')) {
         const controleDiv = e.target.closest('.controles-carrinho');
-        const itemId = parseInt(controleDiv.dataset.id);
+        // Usamos o 'carrinhoId' para ajustar a quantidade, pois cada adição é única
+        const carrinhoId = parseFloat(controleDiv.dataset.id); 
         const ajuste = e.target.dataset.ajuste === '+' ? 1 : -1;
         
-        ajustarQuantidade(itemId, ajuste);
+        ajustarQuantidade(carrinhoId, ajuste);
     }
 });
 

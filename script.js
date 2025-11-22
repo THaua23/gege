@@ -33,7 +33,7 @@ const menu = {
     sorvetes: [
         { id: 25, nome: 'Copão', preco: 6.00 },
         { id: 26, nome: 'Moreninha', preco: 6.00 },
-        { id: 27, nome: 'Capinho', preco: 5.00 },
+        { id: 27, nome: 'Copinho', preco: 5.00 },
         { id: 28, nome: 'Picolé Especial', preco: 5.00 },
         { id: 29, nome: 'Picolé Regional', preco: 4.00 },
         { id: 30, nome: 'Picolé Recheado', preco: 8.00 }
@@ -443,4 +443,5 @@ btnVerCarrinho.addEventListener('click', (e) => {
 
 
 // Inicializa o carrinho
+
 calcularTotal();
